@@ -22,7 +22,6 @@ jobs:
 
     - name: Install dependencies
       uses: bahmutov/npm-install@v1
-      run: npm t
 
     - name: serverless deploy
       uses: serverless/github-action@master
