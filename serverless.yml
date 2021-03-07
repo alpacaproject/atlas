@@ -1,8 +1,6 @@
 service:
   name: atlas
 
-useDotenv: true
-
 package:
   individually: false
   include:

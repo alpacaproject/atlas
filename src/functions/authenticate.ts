@@ -26,6 +26,8 @@ export const handle = wrap<APIGatewayProxyHandlerV2>(async event => {
     return invalidRequest('Required parameters are missing in the request.')
   }
 
+  console.log(process.env.PRIVATE_KEY)
+
   const token = jwt.sign({}, process.env.PRIVATE_KEY, {
     algorithm: 'RS256',
     expiresIn: '1d',
