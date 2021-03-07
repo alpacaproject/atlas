@@ -1,6 +1,13 @@
 service:
   name: atlas
 
+useDotenv: true
+
+package:
+  individually: false
+  include:
+    - src/**
+
 custom:
   webpack:
     webpackConfig: ./webpack.config.js
@@ -17,6 +24,7 @@ plugins:
   - serverless-iamroles
   - serverless-prune-plugin
   - serverless-plugin-tracing
+  - serverless-dotenv-plugin
 
 provider:
   name: aws
@@ -44,6 +52,8 @@ functions:
   authenticate:
     handler: src/functions/authenticate.handle
     memorySize: 512
+    environment:
+      PRIVATE_KEY: ${env:PRIVATE_KEY}
     events:
       - http:
           path: /authenticate

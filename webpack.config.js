@@ -2,6 +2,7 @@ const path = require('path')
 const slsw = require('serverless-webpack')
 const nodeExternals = require('webpack-node-externals')
 const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin')
+const CopyWebpackPlugin = require('copy-webpack-plugin')
 
 module.exports = {
   context: __dirname,
@@ -21,6 +22,9 @@ module.exports = {
     filename: '[name].js'
   },
   target: 'node',
+  node: {
+    __dirname: true,
+  },
   externals: [nodeExternals()],
   module: {
     rules: [
@@ -47,6 +51,11 @@ module.exports = {
       eslintOptions: {
         cache: true
       }
+    }),
+    new CopyWebpackPlugin({
+      patterns: [
+        { from: 'static', to: 'static' }
+      ]
     })
   ]
 }
