@@ -26,15 +26,20 @@ export const handle = wrap<APIGatewayProxyHandlerV2>(async event => {
     return invalidRequest('Required parameters are missing in the request.')
   }
 
-  console.log(process.env.PRIVATE_KEY)
+  const expiresIn = 60 * 15 // 15 minutes
 
-  const token = jwt.sign({}, process.env.PRIVATE_KEY, {
+  const accessToken = jwt.sign({}, process.env.PRIVATE_KEY, {
     algorithm: 'RS256',
-    expiresIn: '1d',
+    expiresIn,
     issuer: 'atlas'
   })
 
   const refreshToken = 'refresh'
 
-  return jsonResponse({ token, refreshToken })
+  return jsonResponse({
+    token_type: 'Bearer',
+    expires_in: expiresIn,
+    access_token: accessToken,
+    refresh_token: refreshToken
+  })
 })
