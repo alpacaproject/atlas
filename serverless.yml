@@ -57,3 +57,40 @@ functions:
           path: /authenticate
           method: POST
           cors: true
+    iamRoleStatements:
+      - Effect: Allow
+        Action:
+          - dynamodb:Query
+          - dynamodb:Scan
+          - dynamodb:GetItem
+         Resource: "arn:aws:dynamodb:*:*:table/users"
+      - Effect: Allow
+        Action: dynamodb:PutItem
+        Resource: "arn:aws:dynamodb:*:*:table/MyTable"
+
+resources:
+  Resources:
+
+    dbUsers:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: users
+        BillingMode: PAY_PER_REQUEST
+        AttributeDefinitions:
+          - AttributeName: id
+            AttributeType: S
+        KeySchema:
+          - AttributeName: id
+            KeyType: HASH
+
+    dbAuthenticationLogs:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: authentication_logs
+        BillingMode: PAY_PER_REQUEST
+        AttributeDefinitions:
+          - AttributeName: id
+            AttributeType: S
+        KeySchema:
+          - AttributeName: id
+            KeyType: HASH
