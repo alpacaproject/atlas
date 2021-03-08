@@ -13,5 +13,4 @@ jspm_packages
 ffmpeg-layer/layer
 
 # Environment
-
 .env*

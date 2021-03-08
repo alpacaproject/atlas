@@ -47,9 +47,10 @@ provider:
       Resource: "*"
 
 functions:
+  validateAuth:
+    handler: src/functions/validateAuth.handle
   authenticate:
     handler: src/functions/authenticate.handle
-    memorySize: 512
     environment:
       PRIVATE_KEY: ${env:PRIVATE_KEY}
     events:
@@ -57,3 +58,34 @@ functions:
           path: /authenticate
           method: POST
           cors: true
+  me:
+    handler: src/functions/getUserInfo.handle
+    events:
+      - http:
+          path: /me
+          method: GET
+          cors: true
+          authorizer: validateAuth
+
+  resources:
+    Resources:
+      GatewayResponse:
+        Type: 'AWS::ApiGateway::GatewayResponse'
+        Properties:
+          ResponseParameters:
+            gatewayresponse.header.Access-Control-Allow-Origin: "'*'"
+            gatewayresponse.header.Access-Control-Allow-Headers: "'*'"
+          ResponseType: EXPIRED_TOKEN
+          RestApiId:
+            Ref: 'ApiGatewayRestApi'
+          StatusCode: '401'
+      AuthFailureGatewayResponse:
+        Type: 'AWS::ApiGateway::GatewayResponse'
+        Properties:
+          ResponseParameters:
+            gatewayresponse.header.Access-Control-Allow-Origin: "'*'"
+            gatewayresponse.header.Access-Control-Allow-Headers: "'*'"
+          ResponseType: UNAUTHORIZED
+          RestApiId:
+            Ref: 'ApiGatewayRestApi'
+          StatusCode: '401'
