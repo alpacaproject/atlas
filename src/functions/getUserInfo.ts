@@ -1,11 +1,17 @@
-import { APIGatewayProxyHandlerV2 } from 'aws-lambda'
+import { APIGatewayProxyWithLambdaAuthorizerHandler as Handler } from 'aws-lambda'
 import wrap from '@dazn/lambda-powertools-pattern-basic'
 
 import 'source-map-support/register'
-import { jsonResponse } from './utils/httpResponse'
+import { jsonResponse } from '../utils/httpResponse'
 
-export const handle = wrap<APIGatewayProxyHandlerV2>(async () => {
+type AuthContext = {
+  principalId: string
+}
+
+export const handle = wrap<Handler<AuthContext>>(async event => {
+  const userId = event.requestContext.authorizer.principalId
+
   return jsonResponse({
-    ok: true
+    userId
   })
 })

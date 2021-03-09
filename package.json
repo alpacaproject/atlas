@@ -21,6 +21,7 @@
     "aws-sdk": "^2.776.0",
     "jsonwebtoken": "^8.5.1",
     "serverless": "^2.8.0",
+    "serverless-dynamodb-local": "^0.2.39",
     "source-map-support": "^0.5.10",
     "uuid": "^8.3.1"
   },

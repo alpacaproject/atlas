@@ -1,9 +1,19 @@
-import { APIGatewayProxyResultV2 } from 'aws-lambda'
+import { APIGatewayProxyResult } from 'aws-lambda'
+
+export function created(): APIGatewayProxyResult {
+  return {
+    statusCode: 201,
+    body: null,
+    headers: {
+      'Content-Type': 'application/json'
+    }
+  }
+}
 
 export function jsonResponse(
   body: Record<string, any>,
   statusCode = 200
-): APIGatewayProxyResultV2 {
+): APIGatewayProxyResult {
   return {
     statusCode,
     body: JSON.stringify(body),
@@ -16,7 +26,7 @@ export function jsonResponse(
 export function invalidRequest(
   description: string,
   statusCode = 400
-): APIGatewayProxyResultV2 {
+): APIGatewayProxyResult {
   return jsonResponse(
     {
       error: 'invalid_request',

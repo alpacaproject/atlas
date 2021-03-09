@@ -1,6 +1,15 @@
 service:
   name: atlas
 
+plugins:
+  - serverless-webpack
+  - serverless-dynamodb-local
+  - serverless-offline
+  - serverless-iamroles
+  - serverless-prune-plugin
+  - serverless-plugin-tracing
+  - serverless-dotenv-plugin
+
 package:
   individually: false
   include:
@@ -15,14 +24,12 @@ custom:
   prune:
     automatic: true
     number: 3
-
-plugins:
-  - serverless-offline
-  - serverless-webpack
-  - serverless-iamroles
-  - serverless-prune-plugin
-  - serverless-plugin-tracing
-  - serverless-dotenv-plugin
+  dynamodb:
+    stages:
+      - dev
+      - local
+    start:
+      migrate: true
 
 provider:
   name: aws
@@ -49,6 +56,8 @@ provider:
 functions:
   validateAuth:
     handler: src/functions/validateAuth.handle
+    environment:
+      PUBLIC_KEY: ${env:PUBLIC_KEY}
   authenticate:
     handler: src/functions/authenticate.handle
     environment:
@@ -58,6 +67,17 @@ functions:
           path: /authenticate
           method: POST
           cors: true
+  register:
+    handler: src/functions/register.handle
+    events:
+      - http:
+          path: /register
+          method: POST
+          cors: true
+    iamRoleStatements:
+      - Effect: Allow
+        Action: dynamodb:PutItem
+        Resource: "arn:aws:dynamodb:*:*:table/users"
   me:
     handler: src/functions/getUserInfo.handle
     events:
@@ -67,25 +87,66 @@ functions:
           cors: true
           authorizer: validateAuth
 
-  resources:
-    Resources:
-      GatewayResponse:
-        Type: 'AWS::ApiGateway::GatewayResponse'
-        Properties:
-          ResponseParameters:
-            gatewayresponse.header.Access-Control-Allow-Origin: "'*'"
-            gatewayresponse.header.Access-Control-Allow-Headers: "'*'"
-          ResponseType: EXPIRED_TOKEN
-          RestApiId:
-            Ref: 'ApiGatewayRestApi'
-          StatusCode: '401'
-      AuthFailureGatewayResponse:
-        Type: 'AWS::ApiGateway::GatewayResponse'
-        Properties:
-          ResponseParameters:
-            gatewayresponse.header.Access-Control-Allow-Origin: "'*'"
-            gatewayresponse.header.Access-Control-Allow-Headers: "'*'"
-          ResponseType: UNAUTHORIZED
-          RestApiId:
-            Ref: 'ApiGatewayRestApi'
-          StatusCode: '401'
+resources:
+  Resources:
+
+    GatewayResponse:
+      Type: 'AWS::ApiGateway::GatewayResponse'
+      Properties:
+        ResponseParameters:
+          gatewayresponse.header.Access-Control-Allow-Origin: "'*'"
+          gatewayresponse.header.Access-Control-Allow-Headers: "'*'"
+        ResponseType: EXPIRED_TOKEN
+        RestApiId:
+          Ref: 'ApiGatewayRestApi'
+        StatusCode: '401'
+    AuthFailureGatewayResponse:
+      Type: 'AWS::ApiGateway::GatewayResponse'
+      Properties:
+        ResponseParameters:
+          gatewayresponse.header.Access-Control-Allow-Origin: "'*'"
+          gatewayresponse.header.Access-Control-Allow-Headers: "'*'"
+        ResponseType: UNAUTHORIZED
+        RestApiId:
+          Ref: 'ApiGatewayRestApi'
+        StatusCode: '401'
+
+    dbUsers:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: users
+        ProvisionedThroughput:
+            ReadCapacityUnits: 5
+            WriteCapacityUnits: 5
+        AttributeDefinitions:
+          - AttributeName: id
+            AttributeType: S
+          - AttributeName: email
+            AttributeType: S
+        KeySchema:
+          - AttributeName: id
+            KeyType: HASH
+        GlobalSecondaryIndexes:
+          - IndexName: email-index
+            KeySchema:
+              - AttributeName: email
+                KeyType: HASH
+            Projection:
+              ProjectionType: KEYS_ONLY
+            ProvisionedThroughput:
+              ReadCapacityUnits: 5
+              WriteCapacityUnits: 5
+
+    dbAuthenticationLogs:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: authentication_logs
+        ProvisionedThroughput:
+            ReadCapacityUnits: 5
+            WriteCapacityUnits: 5
+        AttributeDefinitions:
+          - AttributeName: id
+            AttributeType: S
+        KeySchema:
+          - AttributeName: id
+            KeyType: HASH

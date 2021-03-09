@@ -1,14 +1,9 @@
-// import AWS from 'aws-sdk'
-// import { v4 as uuid } from 'uuid'
-
-// import fs from 'fs'
-// import { resolve } from 'path'
 import jwt from 'jsonwebtoken'
-import { APIGatewayProxyHandlerV2 } from 'aws-lambda'
+import { APIGatewayProxyHandlerV2 as Handler } from 'aws-lambda'
 import wrap from '@dazn/lambda-powertools-pattern-basic'
 
 import 'source-map-support/register'
-import { invalidRequest, jsonResponse } from './utils/httpResponse'
+import { invalidRequest, jsonResponse } from '../utils/httpResponse'
 
 type AuthenticateRequest = {
   email: string
@@ -17,7 +12,7 @@ type AuthenticateRequest = {
   client_secret: string
 }
 
-export const handle = wrap<APIGatewayProxyHandlerV2>(async event => {
+export const handle = wrap<Handler>(async event => {
   const { email, password, client_id, client_secret } = JSON.parse(
     event.body
   ) as AuthenticateRequest
@@ -31,7 +26,8 @@ export const handle = wrap<APIGatewayProxyHandlerV2>(async event => {
   const accessToken = jwt.sign({}, process.env.PRIVATE_KEY, {
     algorithm: 'RS256',
     expiresIn,
-    issuer: 'atlas'
+    issuer: 'atlas',
+    subject: 'user-id'
   })
 
   const refreshToken = 'refresh'

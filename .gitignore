@@ -8,9 +8,8 @@ jspm_packages
 # Webpack directories
 .webpack
 
-# Layers
-
-ffmpeg-layer/layer
-
 # Environment
 .env*
+
+# Serverless
+.dynamodb
