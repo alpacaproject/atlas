@@ -777,6 +777,11 @@
   resolved "https://registry.yarnpkg.com/@types/aws-lambda/-/aws-lambda-8.10.64.tgz#4bdcb725aef96bef0cb1decf19c7efff1df22fe7"
   integrity sha512-LRKk2UQCSi7BsO5TlfSI8cTNpOGz+MH6+RXEWtuZmxJficQgxwEYJDiKVirzgyiHce0L0F4CqCVvKTwblAeOUw==
 
+"@types/bcryptjs@^2.4.2":
+  version "2.4.2"
+  resolved "https://registry.yarnpkg.com/@types/bcryptjs/-/bcryptjs-2.4.2.tgz#e3530eac9dd136bfdfb0e43df2c4c5ce1f77dfae"
+  integrity sha512-LiMQ6EOPob/4yUL66SZzu6Yh77cbzJFYll+ZfaPiPPFswtIlA/Fs1MzdKYA7JApHU49zQTbJGX3PDmCpIdDBRQ==
+
 "@types/cacheable-request@^6.0.1":
   version "6.0.1"
   resolved "https://registry.yarnpkg.com/@types/cacheable-request/-/cacheable-request-6.0.1.tgz#5d22f3dded1fd3a84c0bbeb5039a7419c2c91976"
@@ -1566,6 +1571,11 @@ bcrypt-pbkdf@^1.0.0:
   integrity sha1-pDAdOJtqQ/m2f/PKEaP2Y342Dp4=
   dependencies:
     tweetnacl "^0.14.3"
+
+bcryptjs@^2.4.3:
+  version "2.4.3"
+  resolved "https://registry.yarnpkg.com/bcryptjs/-/bcryptjs-2.4.3.tgz#9ab5627b93e60621ff7cdac5da9733027df1d0cb"
+  integrity sha1-mrVie5PmBiH/fNrF2pczAn3x0Ms=
 
 big.js@^5.2.2:
   version "5.2.2"
@@ -7017,19 +7027,12 @@ serverless-dynamodb-local@^0.2.39:
     dynamodb-localhost "0.0.9"
     lodash "^4.17.0"
 
-serverless-iam-roles-per-function@^2.0.2:
-  version "2.0.2"
-  resolved "https://registry.yarnpkg.com/serverless-iam-roles-per-function/-/serverless-iam-roles-per-function-2.0.2.tgz#c64eb2f34552e59d5fb8cb2169ebbd27734a6774"
-  integrity sha512-3zv4Af3x7KJHC4fuJMHniEEstCljMghReaYIg94Spdsqkhiy8GJ3yfJ5Jy+wiG/DvyObK91JJNMjLhDnDc+vCQ==
+serverless-iam-roles-per-function@^3.1.0:
+  version "3.1.0"
+  resolved "https://registry.yarnpkg.com/serverless-iam-roles-per-function/-/serverless-iam-roles-per-function-3.1.0.tgz#3bd87011234641f4e4883b1a8aeecb8610ac71c5"
+  integrity sha512-/kNfT169FOOrYtkN6WV3fU9Nt0E2pku/1Vio1My82iKnbUQ9Bx35PSOvdRS32e7mLVwbdwZ5ecMKG1lpsuQLoA==
   dependencies:
-    lodash "^4.17.15"
-
-serverless-iamroles@^2.1.3:
-  version "2.1.3"
-  resolved "https://registry.yarnpkg.com/serverless-iamroles/-/serverless-iamroles-2.1.3.tgz#d31d779d161f4370bc80575a4ecb3be837835416"
-  integrity sha512-3hdPiCTiNO3R26rLtUeJNXDWxW+KRSL9mF/nHV5kkxgJJaXDfg5/WaZkrGclCYm5xJHk0yKu/k7/iDch1hozJw==
-  dependencies:
-    lodash "^4.17.15"
+    lodash "^4.17.20"
 
 serverless-offline@^6.8.0:
   version "6.8.0"

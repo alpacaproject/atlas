@@ -1,5 +1,6 @@
 import AWS from 'aws-sdk'
 import { v4 as uuid } from 'uuid'
+import bcrypt from 'bcryptjs'
 
 import { APIGatewayProxyHandlerV2 as Handler } from 'aws-lambda'
 import wrap from '@dazn/lambda-powertools-pattern-basic'
@@ -7,9 +8,9 @@ import wrap from '@dazn/lambda-powertools-pattern-basic'
 import 'source-map-support/register'
 import { invalidRequest, created } from '../utils/httpResponse'
 
-const DDB = new AWS.DynamoDB.DocumentClient({
-  endpoint: 'http://localhost:8000'
-})
+const DDB = new AWS.DynamoDB.DocumentClient()
+
+const SES = new AWS.SES()
 
 type RegisterRequest = {
   name: string
@@ -37,14 +38,30 @@ export const handle = wrap<Handler>(async event => {
     return invalidRequest('User already exists.', 409)
   }
 
+  const hashedPassword = await bcrypt.hash(password, 10)
+
   await DDB.put({
     TableName: 'users',
     Item: {
       id: uuid(),
       name,
       email,
-      password
+      password: hashedPassword,
+      registrationToken: uuid(),
+      createdAt: Date.now()
     }
+  }).promise()
+
+  await SES.sendTemplatedEmail({
+    Template: 'RegistrationEmail',
+    TemplateData: JSON.stringify({
+      name,
+      link: 'https://google.com'
+    }),
+    Destination: {
+      ToAddresses: [`${name} <${email}>`]
+    },
+    Source: 'Equipe Rocketseat <oi@rocketseat.com.br>'
   }).promise()
 
   return created()

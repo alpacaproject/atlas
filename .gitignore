@@ -2,6 +2,9 @@
 node_modules
 jspm_packages
 
+# ESLint
+.eslintcache
+
 # Serverless directories
 .serverless
 
