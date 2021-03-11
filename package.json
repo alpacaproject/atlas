@@ -33,6 +33,7 @@
     "@types/uuid": "^8.3.0",
     "@typescript-eslint/eslint-plugin": "^4.5.0",
     "@typescript-eslint/parser": "^4.5.0",
+    "aws-sdk": "^2.776.0",
     "eslint": "^7.11.0",
     "eslint-config-prettier": "^6.14.0",
     "eslint-config-standard": "^14.1.1",
@@ -46,18 +47,18 @@
     "prettier": "^2.1.2",
     "serverless-create-global-dynamodb-table": "^3.0.0",
     "serverless-dotenv-plugin": "^3.8.1",
+    "serverless-dynamodb-local": "^0.2.39",
     "serverless-iam-roles-per-function": "^3.1.0",
     "serverless-offline": "^6.8.0",
+    "serverless-offline-ssm": "^5.2.0",
     "serverless-plugin-tracing": "^2.0.0",
     "serverless-prune-plugin": "^1.4.3",
     "serverless-webpack": "^5.2.0",
-    "serverless-dynamodb-local": "^0.2.39",
     "ts-loader": "^5.3.3",
     "ts-node": "^8.10.2",
     "typescript": "^3.2.4",
     "webpack": "^4.29.0",
-    "webpack-node-externals": "^1.7.2",
-    "aws-sdk": "^2.776.0"
+    "webpack-node-externals": "^1.7.2"
   },
   "license": "MIT"
 }

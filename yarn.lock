@@ -7034,6 +7034,11 @@ serverless-iam-roles-per-function@^3.1.0:
   dependencies:
     lodash "^4.17.20"
 
+serverless-offline-ssm@^5.2.0:
+  version "5.2.0"
+  resolved "https://registry.yarnpkg.com/serverless-offline-ssm/-/serverless-offline-ssm-5.2.0.tgz#7b4862dd40d3f09674a0c3dcdd985ab5c447c5eb"
+  integrity sha512-AKNqgc0up5XUkZva3SeIIPss3DucBBOglJ5rIo1qJk14j4ZuT/6Pg99l0newxH5aOniBYE1P9YrUAjK50b6BjA==
+
 serverless-offline@^6.8.0:
   version "6.8.0"
   resolved "https://registry.yarnpkg.com/serverless-offline/-/serverless-offline-6.8.0.tgz#65d2192e41ef87ebcbc1093108db6a25059d6ab5"

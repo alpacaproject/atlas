@@ -4,6 +4,7 @@ service:
 plugins:
   - serverless-webpack
   - serverless-dynamodb-local
+  - serverless-offline-ssm
   - serverless-offline
   - serverless-iam-roles-per-function
   - serverless-prune-plugin
@@ -30,6 +31,9 @@ custom:
       - local
     start:
       migrate: true
+  serverless-offline-ssm:
+    stages:
+      - local
 
 provider:
   name: aws
@@ -57,13 +61,13 @@ functions:
   validateAuth:
     handler: src/functions/validateAuth.handle
     environment:
-      PUBLIC_KEY: ${ssm:/atlas-jwt-public-key~true}
+      PUBLIC_KEY: ${ssm:atlas_jwt_public_key~true}
 
   # Authenticate
   authenticate:
     handler: src/functions/authenticate.handle
     environment:
-      PRIVATE_KEY: ${ssm:/atlas-jwt-private-key~true}
+      PRIVATE_KEY: ${ssm:atlas_jwt_private_key~true}
     events:
       - http:
           path: /authenticate
