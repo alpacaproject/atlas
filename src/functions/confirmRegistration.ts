@@ -49,9 +49,11 @@ export const handle = wrap<Handler<AuthContext>>(async event => {
       Key: {
         id: user.id
       },
-      UpdateExpression: 'set confirmed = :confirmed',
+      UpdateExpression:
+        'set confirmed = :confirmed, registrationToken = :registrationToken',
       ExpressionAttributeValues: {
-        ':confirmed': true
+        ':confirmed': true,
+        ':registrationToken': null
       }
     })
     .promise()
