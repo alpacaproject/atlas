@@ -46,6 +46,16 @@ provider:
   environment:
     DEBUG: '*'
     NODE_ENV: ${self:provider.stage}
+    BASE_URL: {
+      "Fn::Join" : [
+        "",
+        [
+          " https://",
+          { "Ref" : "ApiGatewayRestApi" },
+          ".execute-api.${self:provider.region}.amazonaws.com/${self:provider.stage}"
+        ]
+      ]
+    }
     AWS_NODEJS_CONNECTION_REUSE_ENABLED: 1
   tracing:
     lambda: true
@@ -112,6 +122,20 @@ functions:
     iamRoleStatements:
       - Effect: Allow
         Action: dynamodb:Query
+        Resource: "arn:aws:dynamodb:${self:provider.region}:*:table/users"
+
+  # Confirm user registration
+  confirmRegistration:
+    handler: src/functions/confirmRegistration.handle
+    events:
+      - http:
+          path: /confirm
+          method: GET
+    iamRoleStatements:
+      - Effect: Allow
+        Action:
+          - dynamodb:Update
+          - dynamodb:Query
         Resource: "arn:aws:dynamodb:${self:provider.region}:*:table/users"
 
 resources:

@@ -47,6 +47,10 @@ export const handle = wrap<Handler>(async event => {
     return invalidRequest('Invalid e-mail/password combination.')
   }
 
+  if (!user.confirmed) {
+    return invalidRequest('User is not confirmed, check your e-mail.')
+  }
+
   const expiresIn = 60 * 15 // 15 minutes
 
   const accessToken = jwt.sign({}, process.env.PRIVATE_KEY, {

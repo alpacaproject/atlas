@@ -9,6 +9,7 @@ import 'source-map-support/register'
 
 import { invalidRequest, created } from '../utils/httpResponse'
 import { document } from '../utils/dynamoDBClient'
+import { config } from '../config/app'
 
 const SES = new AWS.SES()
 
@@ -41,6 +42,7 @@ export const handle = wrap<Handler>(async event => {
   }
 
   const hashedPassword = await bcrypt.hash(password, 10)
+  const registrationToken = uuid()
 
   await document
     .put({
@@ -50,17 +52,20 @@ export const handle = wrap<Handler>(async event => {
         name,
         email,
         password: hashedPassword,
-        registrationToken: uuid(),
+        registrationToken,
+        confirmed: false,
         createdAt: Date.now()
       }
     })
     .promise()
 
+  const confirmRegistrationLink = `${config.baseURL}/confirm?token=${registrationToken}&email=${email}`
+
   await SES.sendTemplatedEmail({
     Template: 'RegistrationEmail',
     TemplateData: JSON.stringify({
       name,
-      link: 'https://google.com'
+      link: confirmRegistrationLink
     }),
     Destination: {
       ToAddresses: [`${name} <${email}>`]
