@@ -1,6 +1,6 @@
-# package directories
+# Packages
 node_modules
-jspm_packages
+yarn-error.log
 
 # ESLint
 .eslintcache
