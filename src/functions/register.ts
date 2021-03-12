@@ -26,7 +26,7 @@ export const handle = wrap<Handler>(async event => {
     return invalidRequest('Required parameters are missing in the request.')
   }
 
-  const hasUserWithSameEmail = await document
+  const response = await document
     .query({
       TableName: 'users',
       IndexName: 'email-index',
@@ -37,27 +37,32 @@ export const handle = wrap<Handler>(async event => {
     })
     .promise()
 
-  if (hasUserWithSameEmail.Count > 0) {
-    return invalidRequest('User already exists.', 409)
-  }
-
-  const hashedPassword = await bcrypt.hash(password, 10)
+  const userAlreadyRegistered = response.Count > 0
+  const user = response.Items[0]
   const registrationToken = uuid()
 
-  await document
-    .put({
-      TableName: 'users',
-      Item: {
-        id: uuid(),
-        name,
-        email,
-        password: hashedPassword,
-        registrationToken,
-        confirmed: false,
-        createdAt: Date.now()
-      }
-    })
-    .promise()
+  if (userAlreadyRegistered) {
+    if (user.confirmed) {
+      return invalidRequest('User already exists.', 409)
+    }
+  } else {
+    const hashedPassword = await bcrypt.hash(password, 10)
+
+    await document
+      .put({
+        TableName: 'users',
+        Item: {
+          id: uuid(),
+          name,
+          email,
+          password: hashedPassword,
+          registrationToken,
+          confirmed: false,
+          createdAt: Date.now()
+        }
+      })
+      .promise()
+  }
 
   const confirmRegistrationLink = `${config.baseURL}/confirm?token=${registrationToken}&email=${email}`
 
