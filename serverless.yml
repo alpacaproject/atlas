@@ -69,7 +69,7 @@ provider:
 functions:
   # Authorizer
   validateAuth:
-    handler: src/functions/validateAuth.handle
+    handler: src/middlewares/validateAuth.handle
     environment:
       PUBLIC_KEY: ${ssm:atlas_jwt_public_key~true}
 

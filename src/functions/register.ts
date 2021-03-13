@@ -39,14 +39,18 @@ export const handle = wrap<Handler>(async event => {
 
   const userAlreadyRegistered = response.Count > 0
   const user = response.Items[0]
-  const registrationToken = uuid()
+
+  let registrationToken: string
 
   if (userAlreadyRegistered) {
     if (user.confirmed) {
       return invalidRequest('User already exists.', 409)
     }
+
+    registrationToken = user.registrationToken
   } else {
     const hashedPassword = await bcrypt.hash(password, 10)
+    registrationToken = uuid()
 
     await document
       .put({
